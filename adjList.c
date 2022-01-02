@@ -4,189 +4,228 @@
 #include "adjList.h"
 
 //------------------------------------------------
-// Edge implementation
-//------------------------------------------------
-typedef struct Edge {
-    int src;
-    int dest;
-    int weight;
-} Edge;
-
-Edge *makeEdge(int src, int dest, int weight) {
-    Edge *newEdge = (Edge *) malloc(sizeof(Edge));
-    newEdge->src = src;
-    newEdge->dest = dest;
-    newEdge->weight = weight;
-    return newEdge;
-}
-
-void freeEdge(Edge *edge) {
-    if(edge == NULL) return;
-    Edge *temp = edge;
-    edge = NULL;
-    free(temp);
-}
-
-//------------------------------------------------
 // Adjacency List implementation
 //------------------------------------------------
+struct _Node {
+    int id;
+    struct _Node *nextNode;  //next node in the linked list of nodes
+    struct _Edge *firstEdge;  //first Edge of the adjacency list of this node
+};
 
-// A structure to represent an adjacency list node
-typedef struct AdjListNode {
-    Edge *edge;
-    struct AdjListNode *next;
-} Node;
-
-void freeNode(Node *node) {
-    if(node == NULL) return;
-    freeEdge(node->edge);
-    Node *temp = node;
-    node = NULL;
-    free(temp);
-}
-
-// A structure to represent an adjacency liat
-typedef struct AdjacencyList {
-    Node *head; // pointer to head node of list
-} AdjList;
-
-// A utility function to create a new adjacency list node
-Node *newAdjListNode(Edge *edge) {
-    Node *newNode = (Node *) malloc(sizeof(Node));
-    newNode->edge = edge;
-    newNode->next = NULL;
-    return newNode;
-}
-
-void freeList(AdjList *list) {
-    if (list == NULL) return;
-    Node *p1 = list->head;
-    Node *p2;
-    while (p1) {
-        p2 = p1;
-        p1 = p1->next;
-        freeNode(p2);
-    }
-    list->head = NULL;
-    AdjList *temp = list;
-    free(temp);
-}
-
+typedef struct _Node Node;
+struct _Edge {
+    int weight;
+    struct _Node *destNode;  //Destination of the Edge
+    struct _Edge *nextEdge; //next Edge of the adjacency list
+};
+typedef struct _Edge Edge;
+//Node *find(int u);
+//void addNode(int u);
+//void insertEdge(int u,int v);
+//void deleteEdge(int u,int v);
+//void deleteIncomingEdges(int u);
+//void deleteVertex(int u);
+//void display();
 //------------------------------------------------
 // Graph implementation
 //------------------------------------------------
-// A structure to represent a graph. A graph is an array of adjacency lists.
+
+// A structure to represent a graph. 
 // Size of array will be V (number of vertices in graph)
 typedef struct _Graph {
     int V;
-    AdjList *array;
+    Node *start;
 } Graph;
 
 // A utility function that creates a graph of V vertices
 Graph *createGraph(int V) {
     Graph *graph = (Graph *) malloc(sizeof(Graph));
-    graph->V = V;
-    // Create an array of adjacency lists.  Size of array will be V
-    graph->array = (AdjList *) malloc(V * sizeof(AdjList));
-    // Initialize each adjacency list as empty by making head as NULL
-    int i;
-    for (i = 0; i < V; ++i)
-        graph->array[i].head = NULL;
+    graph->V = 0;
+    // Create a list of V nodes
+    graph->start = NULL;
+    for (int i = 0; i < V; i++) {
+        addNode(graph, i);
+    }
     return graph;
 }
 
-//resizes the graph when there's a new node
-void addNode(Graph *graph, int src) {
-    int v = graph->V;
-    if (src > v) {
-        v = src + 1;
-        graph->array = (AdjList *) realloc(graph->array, v * sizeof(AdjList));
-        graph->V = v;
+//finds a node with id
+Node *find(Graph *graph, int id) {
+    Node *ptr, *loc;
+    ptr = graph->start;
+    while (ptr != NULL) {
+        if (ptr->id == id) {
+            loc = ptr;
+            return loc;
+        } else
+            ptr = ptr->nextNode;
+    }
+    loc = NULL;
+    return loc;
+}
+
+//method deletes edges where their destination's ids equal to id
+void deleteInEdges(Graph *graph, int id) {
+    Node *ptr;
+    Edge *q, *tmp;
+
+    ptr = graph->start;
+    while (ptr != NULL) {
+        if (ptr->firstEdge == NULL)   //Edge list for node ptr is empty
+        {
+            ptr = ptr->nextNode;
+            continue; // continue searching in other Edge lists
+        }
+
+        if (ptr->firstEdge->destNode->id == id) {
+            tmp = ptr->firstEdge;
+            ptr->firstEdge = ptr->firstEdge->nextEdge;
+            free(tmp);
+            continue; // continue searching in other Edge lists
+        }
+        q = ptr->firstEdge;
+        while (q->nextEdge != NULL) {
+            if (q->nextEdge->destNode->id == id) {
+                tmp = q->nextEdge;
+                q->nextEdge = tmp->nextEdge;
+                free(tmp);
+                continue;
+            }
+            q = q->nextEdge;
+        }
+        ptr = ptr->nextNode;
     }
 }
 
-
-// Add an edge from src to dest.
-// If needed, a new node is added to the adjacency list of src.  The node is added by the given weight;
-void addEdge(Graph *graph, int src, int dest, int weight) {
-    //check if an edge of the same src and dest and update it
-    Edge *newEdge = makeEdge(src, dest, weight);
-    Node *newNode;
-
-    //init a list head if there's none
-    if (graph->array[src].head == NULL) {
-        newNode = newAdjListNode(newEdge);
-        graph->array[src].head = newNode;
+void removeEdges(Graph *graph, int src) {
+    Node *pSrc = find(graph, src);
+    Edge *p, *tmp;
+    p = pSrc->firstEdge;
+    while (p != NULL) {
+        tmp = p;
+        p = p->nextEdge;
+        free(tmp);
+    }
+}
+void addNode(Graph *graph, int id) {
+    Node *ptr = find(graph, id);
+    if(ptr !=NULL){
+        removeEdges(graph, id);
+        ptr ->firstEdge = NULL;
         return;
     }
-
-    Node *tempNode = graph->array[src].head;
-    Edge *tempEdge;
-    while (tempNode != NULL) {
-        tempEdge = tempNode->edge;
-        if (tempEdge != NULL) {
-            if (dest == tempEdge->dest) {
-                tempNode->edge = newEdge;
-                return;
-            }
+    Node *tmp = malloc(sizeof(Node));
+    tmp->id = id;
+    tmp->nextNode = NULL;
+    tmp->firstEdge = NULL;
+    graph->V++; //update the graph's size
+    if (graph->start == NULL) {
+        graph->start = tmp;
+        return;
+    }
+    ptr = graph->start;
+    while (ptr->nextNode != NULL) {
+        ptr = ptr->nextNode;
+    }
+    ptr->nextNode = tmp;
+}
+void removeNode(Graph *graph, int id) {
+    graph->V--; //decrease size
+    if(find(graph,id)==NULL) return;
+    //assuming the node exists, free all edges going in and out from this node
+    deleteInEdges(graph, id);
+    removeEdges(graph, id);
+    Node *tmp, *q;
+    if (graph->start->id == id)/* Node to be deleted is first node of list*/
+    {
+        tmp = graph->start;
+        graph->start = graph->start->nextNode;
+    } else /* Node to be deleted is in between or at last */
+    {
+        q = graph->start;
+        while (q->nextNode != NULL) {
+            if (q->nextNode->id == id)
+                break;
+            q = q->nextNode;
         }
-        tempNode = tempNode->next;
+        if (q->nextNode == NULL) {
+            printf("Node not found\n");
+            return;
+        } else {
+            tmp = q->nextNode;
+            q->nextNode = tmp->nextNode;
+        }
     }
-    //add new node;
-    newNode = newAdjListNode(newEdge);
-    tempNode = graph->array[src].head;
-    while (tempNode->next != NULL) {
-        tempEdge = tempNode->edge;
-        if (weight > tempEdge->weight)
-            tempNode = tempNode->next;
-        else
-            break;
-    }
-    newNode->next = tempNode->next;
-    tempNode->next = newNode;
+    free(tmp);
 }
 
-void removeNode(Graph *graph, int src) {
-    if (graph->array[src].head != NULL) {
-        for (int v = 0; v < graph->V; ++v) {
-            Node *node = graph->array[v].head;
-            Node *temp;
-            Edge *edge;
-            while (node != NULL) {
-                edge = node->edge;
-                if (edge != NULL)
-                    if (edge->dest == src || edge->src == src) {
-                        temp = node;
-                        //node = node -> next;
-                        freeNode(temp);//its edge is freed along with the node
-                        break;
-                    }
-                node = node->next;
-            }
-        }
-        freeList(&graph->array[src]);
+void addEdge(Graph *graph, int src, int dest, int weight) {
+    Node *srcNode, *destNode;
+    Edge *ptr, *tmp;
+
+    srcNode = find(graph, src);
+    destNode = find(graph, dest);
+
+    if (srcNode == NULL) {
+        printf("\nStart node not present, first insert node %d\n", src);
+        return;
     }
+    if (destNode == NULL) {
+        printf("\nEnd node not present, first insert node %d\n", dest);
+        return;
+    }
+    tmp = malloc(sizeof(Edge));
+    tmp->weight = weight;
+    tmp->destNode = destNode;
+    tmp->nextEdge = NULL;
+
+    if (srcNode->firstEdge == NULL) {
+        srcNode->firstEdge = tmp;
+        return;
+    }
+    if (srcNode->firstEdge->destNode == destNode) {
+        tmp->nextEdge = srcNode->firstEdge->nextEdge;
+        srcNode->firstEdge = tmp;
+        return;
+    }
+    ptr = srcNode->firstEdge;
+    while (ptr->nextEdge != NULL) {
+        if (ptr->nextEdge->destNode == destNode) {
+            tmp->nextEdge = ptr->nextEdge->nextEdge;
+            ptr->nextEdge = tmp;
+            return;
+        }
+        ptr = ptr->nextEdge;
+    }
+    ptr->nextEdge = tmp;
 }
+
 
 // frees the graph's memory
 void freeGraph(Graph *graph) {
-    int v;
-    for (v = 0; v < graph->V; ++v) {
-        freeList(&graph->array[v]);
+    Node *q;
+    q = graph->start;
+    while (q != NULL) {
+        removeNode(graph, q->id);
+        q = q->nextNode;
     }
+    free(graph);
 }
 
+
 void printGraph(Graph *graph) {
-    int v;
-    for (v = 0; v < graph->V; ++v) {
-        Node *pCrawl = graph->array[v].head;
-        printf("\n Adjacency list of vertex %d\n head [%d]", v, v);
-        while (pCrawl) {
-            printf(" -> %d(%d)", pCrawl->edge->dest, pCrawl->edge->weight);
-            pCrawl = pCrawl->next;
+    Node *ptr;
+    Edge *q;
+
+    ptr = graph->start;
+    while (ptr != NULL) {
+        printf("%d ->", ptr->id);
+        q = ptr->firstEdge;
+        while (q != NULL) {
+            printf(" %d:(%d)", q->destNode->id,q->weight);
+            q = q->nextEdge;
         }
         printf("\n");
-
+        ptr = ptr->nextNode;
     }
-
 }

@@ -15,7 +15,7 @@ Graph *createGraph(int V);
 /*
  * resizes the graph when there's a new node
 */
-void addNode(Graph *graph, int src);
+void addNode(Graph *graph, int id);
 
 /*
  *Add an edge from src to dest.
@@ -26,7 +26,7 @@ void addEdge(Graph *graph, int src, int dest, int weight);
 /*
  * Delete a node in given src
  */
-void removeNode(Graph *graph, int src);
+void removeNode(Graph *graph, int id);
 
 /*
  * Frees the graph's memory
