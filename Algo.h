@@ -18,13 +18,31 @@ typedef struct pathMat{
     int dimantions;
 }pathMat;
 
-void init_path_mat(pathMat M, Graph g);
+void init_path_mat(pathMat* M, Graph* g);
+
+void freeMats(pathMat* M);
 
 //tsp
 //shortest path len
 //shortest path
 //add edge
-int pathLen(int src, int dest);
-int shortestPath(int src, int dest);
+int pathLen(int src, int dest, pathMat* M);
+
+
+/*
+    A structure that represant a path in the graph
+    simlply a list of int's (ids)
+*/
+typedef struct Path{ Node* head;} path;
+
+void addToPath(path* P, int id);
+
+void mergePaths(path* p1, path* p2);
+
+int shortestPath(int src, int dest, pathMat* M);
+
+path recreate(pathMat M*, int src, int dest);
+
+path TSP(path* cities);
 
 #endif //SOFTSYS_A_04_ALGO_H
