@@ -6,19 +6,20 @@
 //------------------------------------------------
 // Adjacency List implementation
 //------------------------------------------------
-struct _Node {
+typedef struct Node Node;
+typedef struct Edge Edge;
+struct Node {
     int id;
-    struct _Node *nextNode;  //next node in the linked list of nodes
-    struct _Edge *firstEdge;  //first Edge of the adjacency list of this node
+    Node *nextNode;  //next node in the linked list of nodes
+    Edge *firstEdge;  //first Edge of the adjacency list of this node
 };
 
-typedef struct _Node Node;
-struct _Edge {
+struct Edge {
     int weight;
-    struct _Node *destNode;  //Destination of the Edge
-    struct _Edge *nextEdge; //next Edge of the adjacency list
+    Node *destNode;  //Destination of the Edge
+    Edge *nextEdge; //next Edge of the adjacency list
 };
-typedef struct _Edge Edge;
+
 //Node *find(int u);
 //void addNode(int u);
 //void insertEdge(int u,int v);
@@ -32,10 +33,7 @@ typedef struct _Edge Edge;
 
 // A structure to represent a graph. 
 // Size of array will be V (number of vertices in graph)
-typedef struct _Graph {
-    int V;
-    Node *start;
-} Graph;
+
 
 // A utility function that creates a graph of V vertices
 Graph *createGraph(int V) {
@@ -107,11 +105,12 @@ void removeEdges(Graph *graph, int src) {
         free(tmp);
     }
 }
+
 void addNode(Graph *graph, int id) {
     Node *ptr = find(graph, id);
-    if(ptr !=NULL){
+    if (ptr != NULL) {
         removeEdges(graph, id);
-        ptr ->firstEdge = NULL;
+        ptr->firstEdge = NULL;
         return;
     }
     Node *tmp = malloc(sizeof(Node));
@@ -129,9 +128,10 @@ void addNode(Graph *graph, int id) {
     }
     ptr->nextNode = tmp;
 }
+
 void removeNode(Graph *graph, int id) {
     graph->V--; //decrease size
-    if(find(graph,id)==NULL) return;
+    if (find(graph, id) == NULL) return;
     //assuming the node exists, free all edges going in and out from this node
     deleteInEdges(graph, id);
     removeEdges(graph, id);
@@ -222,7 +222,7 @@ void printGraph(Graph *graph) {
         printf("%d ->", ptr->id);
         q = ptr->firstEdge;
         while (q != NULL) {
-            printf(" %d:(%d)", q->destNode->id,q->weight);
+            printf(" %d:(%d)", q->destNode->id, q->weight);
             q = q->nextEdge;
         }
         printf("\n");

@@ -4,8 +4,12 @@
 /*
  * A graph data structure
  */
-struct _Graph;
+typedef struct Node Node;
 typedef struct _Graph Graph;
+struct _Graph {
+    int V;
+    Node *start;
+};
 
 /*
  * Creates a graph with V vertices
