@@ -39,6 +39,7 @@ struct Edge {
 Graph *createGraph(int V) {
     Graph *graph = (Graph *) malloc(sizeof(Graph));
     graph->V = 0;
+    graph->MC=0;
     // Create a list of V nodes
     graph->start = NULL;
     for (int i = 0; i < V; i++) {
@@ -78,12 +79,14 @@ void deleteInEdges(Graph *graph, int id) {
         if (ptr->firstEdge->destNode->id == id) {
             tmp = ptr->firstEdge;
             ptr->firstEdge = ptr->firstEdge->nextEdge;
+            graph->MC++;
             free(tmp);
             continue; // continue searching in other Edge lists
         }
         q = ptr->firstEdge;
         while (q->nextEdge != NULL) {
             if (q->nextEdge->destNode->id == id) {
+                graph->MC++;
                 tmp = q->nextEdge;
                 q->nextEdge = tmp->nextEdge;
                 free(tmp);
@@ -101,12 +104,14 @@ void removeEdges(Graph *graph, int src) {
     p = pSrc->firstEdge;
     while (p != NULL) {
         tmp = p;
+        graph->MC++;
         p = p->nextEdge;
         free(tmp);
     }
 }
 
 void addNode(Graph *graph, int id) {
+    graph->MC++;
     Node *ptr = find(graph, id);
     if (ptr != NULL) {
         removeEdges(graph, id);
@@ -131,6 +136,7 @@ void addNode(Graph *graph, int id) {
 
 void removeNode(Graph *graph, int id) {
     graph->V--; //decrease size
+    graph->MC++;
     if (find(graph, id) == NULL) return;
     //assuming the node exists, free all edges going in and out from this node
     deleteInEdges(graph, id);
@@ -174,6 +180,7 @@ void addEdge(Graph *graph, int src, int dest, int weight) {
         printf("\nEnd node not present, first insert node %d\n", dest);
         return;
     }
+    graph->MC++;
     tmp = malloc(sizeof(Edge));
     tmp->weight = weight;
     tmp->destNode = destNode;

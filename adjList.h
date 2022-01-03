@@ -8,6 +8,7 @@ typedef struct Node Node;
 typedef struct _Graph Graph;
 struct _Graph {
     int V;
+    int MC;
     Node *start;
 };
 
