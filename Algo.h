@@ -41,7 +41,7 @@ void mergePaths(path* p1, path* p2);
 
 int shortestPath(int src, int dest, pathMat* M);
 
-path recreate(pathMat M*, int src, int dest);
+path recreate(pathMat *M, int src, int dest);
 
 path TSP(path* cities);
 

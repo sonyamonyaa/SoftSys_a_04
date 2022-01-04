@@ -1,4 +1,4 @@
-#include <Algo.h>
+#include "Algo.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,7 +6,7 @@ void init_path_mat(pathMat* M, Graph* g){
     
     unsigned int inf  = -1; //max value that can be held by an int
 
-    M -> dimantions = g -> V;
+    M->dimantions = g -> V;
 
     M -> weightMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
     M -> preMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
@@ -15,17 +15,17 @@ void init_path_mat(pathMat* M, Graph* g){
     for(int i = 0; i < g -> V; i++){
         for(int j = 0; j < g -> V; j++){
 
-            M.weightMat[(g -> V * i) + j] = inf;
-            M.preMat[(g -> V * i) + j] = -1;
+            M->weightMat[(g -> V * i) + j] = inf;
+            M->preMat[(g -> V * i) + j] = -1;
         }
     }
 
     //executing first step of Fluid Warshall algorithm
-    Node n =  g -> start;
+    Node *n =  g -> start;
 
     while(n != NULL){
 
-        Edge e = n.firstEdge;
+        Edge *e = n->firstEdge;
 
         while(e != NULL){
 
@@ -46,7 +46,7 @@ void init_path_mat(pathMat* M, Graph* g){
 
                 if(i != j){
 
-                    int visitK = M -> weightMat[(i * g.V) + k]  +  M -> weightMat[(k * g.V) + j];
+                    int visitK = M -> weightMat[(i * g->V) + k]  +  M -> weightMat[(k * g->V) + j];
 
                     if( M -> weightMat[(i * g -> V) + j] > visitK){
 
@@ -73,31 +73,31 @@ int pathLen(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantio
 
 void addToPath(path* P, int id){
 
-    n = (Node) malloc(sizeof(Node));
+    //Node *n = (Node*) malloc(sizeof(Node));
 
-    Node n = * P -> head;
+    Node *n = P -> head;
 
     if( n == NULL){
-        P -> head = &n;
+        P -> head = n;
         return;
     }
 
-    while( n.nextNode != NULL){
-        n = *n.nextNode;
+    while( n->nextNode != NULL){
+        n = n->nextNode;
     }
 
-    n.nextNode = &n;
+    n->nextNode = n;
 }
 
 void mergePaths(path* p1, path* p2){
 
-    Node n = * p1 -> head;
+    Node *n = p1 -> head;
 
     if(n == NULL){ p1 -> head = p2 -> head; return;}
 
-    while(*n.nextNode != NULL){
-        n = *n.nextNode;
+    while(n->nextNode != NULL){
+        n = n->nextNode;
     }
 
-    nextNode = p2 -> head;
+    n->nextNode = p2 -> head;
 }
