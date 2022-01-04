@@ -37,10 +37,12 @@ void addToPath(path* P, int id);
 
 void mergePaths(path* p1, path* p2);
 
+void removeDoubles(path* P);
+
 int distance(int src, int dest, pathMat* M);
 
 path* shortestPath(int src, int dest, pathMat* M);
 
-path TSP(path* cities);
+path* TSP(path* cities);
 
 #endif //SOFTSYS_A_04_ALGO_H
