@@ -4,36 +4,8 @@
 #include "adjList.h"
 
 //------------------------------------------------
-// Adjacency List implementation
-//------------------------------------------------
-typedef struct Node Node;
-typedef struct Edge Edge;
-struct Node {
-    int id;
-    Node *nextNode;  //next node in the linked list of nodes
-    Edge *firstEdge;  //first Edge of the adjacency list of this node
-};
-
-struct Edge {
-    int weight;
-    Node *destNode;  //Destination of the Edge
-    Edge *nextEdge; //next Edge of the adjacency list
-};
-
-//Node *find(int u);
-//void addNode(int u);
-//void insertEdge(int u,int v);
-//void deleteEdge(int u,int v);
-//void deleteIncomingEdges(int u);
-//void deleteVertex(int u);
-//void display();
-//------------------------------------------------
 // Graph implementation
 //------------------------------------------------
-
-// A structure to represent a graph. 
-// Size of array will be V (number of vertices in graph)
-
 
 // A utility function that creates a graph of V vertices
 Graph *createGraph(int V) {
