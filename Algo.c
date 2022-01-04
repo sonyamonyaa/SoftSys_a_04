@@ -116,10 +116,49 @@ path* shortestPath(int src, int dest, pathMat* M){
 
         int last = M -> preMat[( M -> dimantions * src) + curr];
 
+        if( last == -1){ return NULL;}        }
+
         addToPath(last);
 
         curr = last; 
     }
+
+    return P;
+}
+
+void removeDoubles(path* P){
+
+    Node* n = P -> head;
+
+    while( n -> nextNode != NULL){
+
+        if( n -> id == n -> nextNode -> id){
+
+            n -> nextNode = n -> nextNode -> nextNode;
+
+        }else{
+
+            n = n -> nextNode;
+        }
+    }
+}
+
+path* TSP(path* cities){
+
+    Node* n = cities -> head;
+
+    path* P = (path*) malloc(sizeof(path));
+
+    while(n -> nextNode != NULL){
+
+        path* P2 = (path*) malloc(sizeof(path));
+
+        P2 = shortestPath(P2, n -> id, n -> nextNode -> id);
+
+        mergePaths(P, P2);
+    }
+
+    removeDoubles(P);
 
     return P;
 }
