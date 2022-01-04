@@ -6,7 +6,7 @@ void init_path_mat(pathMat* M, Graph* g){
     
     unsigned int inf  = -1; //max value that can be held by an int
 
-    M->dimantions = g -> V;
+    M -> dimantions = g -> V;
 
     M -> weightMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
     M -> preMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
@@ -15,8 +15,8 @@ void init_path_mat(pathMat* M, Graph* g){
     for(int i = 0; i < g -> V; i++){
         for(int j = 0; j < g -> V; j++){
 
-            M->weightMat[(g -> V * i) + j] = inf;
-            M->preMat[(g -> V * i) + j] = -1;
+            M -> weightMat[(g -> V * i) + j] = inf;
+            M -> preMat[(g -> V * i) + j] = -1;
         }
     }
 
@@ -69,24 +69,26 @@ void freeMats(pathMat* M){
     M -> weightMat = NULL;
 }
 
-int pathLen(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantions * src) + dest];}
+int distance(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantions * src) + dest];}
 
 void addToPath(path* P, int id){
 
-    //Node *n = (Node*) malloc(sizeof(Node));
+    Node *n = (Node*) malloc(sizeof(Node));
 
-    Node *n = P -> head;
+    n -> id = id; n -> nextNode = NULL; n -> firstEdge = NULL;
 
-    if( n == NULL){
+    Node* c = P -> head;
+
+    if( c == NULL){
+
         P -> head = n;
-        return;
-    }
+        
+    }else{
 
-    while( n->nextNode != NULL){
-        n = n->nextNode;
-    }
+        n -> nextNode = c;
+        P -> head = n;
 
-    n->nextNode = n;
+    }    
 }
 
 void mergePaths(path* p1, path* p2){
@@ -95,9 +97,29 @@ void mergePaths(path* p1, path* p2){
 
     if(n == NULL){ p1 -> head = p2 -> head; return;}
 
-    while(n->nextNode != NULL){
-        n = n->nextNode;
+    while(n -> nextNode != NULL){
+        n = n -> nextNode;
     }
 
-    n->nextNode = p2 -> head;
+    n -> nextNode = p2 -> head;
+}
+
+path* shortestPath(int src, int dest, pathMat* M){
+
+    path* P = (path*) malloc(sizeof(path));
+
+    addToPath(P, dest);
+
+    int curr = dest;
+
+    while( curr != src){
+
+        int last = M -> preMat[( M -> dimantions * src) + curr];
+
+        addToPath(last);
+
+        curr = last; 
+    }
+
+    return P;
 }
