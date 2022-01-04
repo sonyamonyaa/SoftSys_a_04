@@ -106,10 +106,8 @@ void addNode(Graph *graph, int id) {
         ptr->firstEdge = NULL;
         return;
     }
-
     Node* tmp = (Node*) malloc(sizeof(Node));
-
-    tmp -> id = 1; tmp -> nextNode = NULL; tmp -> firstEdge = NULL;
+    tmp -> id = id; tmp -> nextNode = NULL; tmp -> firstEdge = NULL;
 
     graph->V++; //update the graph's size
     if (graph->start == NULL) {
