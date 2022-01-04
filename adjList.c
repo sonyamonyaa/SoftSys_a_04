@@ -4,8 +4,24 @@
 #include "adjList.h"
 
 //------------------------------------------------
+// Adjacency List implementation
+//------------------------------------------------
+
+
+//Node *find(int u);
+//void addNode(int u);
+//void insertEdge(int u,int v);
+//void deleteEdge(int u,int v);
+//void deleteIncomingEdges(int u);
+//void deleteVertex(int u);
+//void display();
+//------------------------------------------------
 // Graph implementation
 //------------------------------------------------
+
+// A structure to represent a graph. 
+// Size of array will be V (number of vertices in graph)
+
 
 // A utility function that creates a graph of V vertices
 Graph *createGraph(int V) {
@@ -90,20 +106,21 @@ void addNode(Graph *graph, int id) {
         ptr->firstEdge = NULL;
         return;
     }
-    Node tmp = (Node) malloc(sizeof(Node));
 
-    tmp = {.id = id, .nextNode = NULL, .firstEdge = NULL};
+    Node* tmp = (Node*) malloc(sizeof(Node));
+
+    tmp -> id = 1; tmp -> nextNode = NULL; tmp -> firstEdge = NULL;
 
     graph->V++; //update the graph's size
     if (graph->start == NULL) {
-        graph->start = &tmp;
+        graph->start = tmp;
         return;
     }
     ptr = graph->start;
     while (ptr->nextNode != NULL) {
         ptr = ptr->nextNode;
     }
-    ptr->nextNode = &tmp;
+    ptr->nextNode = tmp;
 }
 
 void removeNode(Graph *graph, int id) {
