@@ -118,20 +118,20 @@ void addNode(Graph *graph, int id) {
         ptr->firstEdge = NULL;
         return;
     }
-    Node *tmp = malloc(sizeof(Node));
-    tmp->id = id;
-    tmp->nextNode = NULL;
-    tmp->firstEdge = NULL;
+    Node tmp = (Node) malloc(sizeof(Node));
+
+    tmp = {.id = id, .nextNode = NULL, .firstEdge = NULL};
+
     graph->V++; //update the graph's size
     if (graph->start == NULL) {
-        graph->start = tmp;
+        graph->start = &tmp;
         return;
     }
     ptr = graph->start;
     while (ptr->nextNode != NULL) {
         ptr = ptr->nextNode;
     }
-    ptr->nextNode = tmp;
+    ptr->nextNode = &tmp;
 }
 
 void removeNode(Graph *graph, int id) {
@@ -209,7 +209,7 @@ void addEdge(Graph *graph, int src, int dest, int weight) {
 
 
 // frees the graph's memory
-void freeGraph(Graph *graph) {
+void freeGraph(Graph *graph) {   
     Node *q;
     q = graph->start;
     while (q != NULL) {
