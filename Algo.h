@@ -26,8 +26,6 @@ void freeMats(pathMat* M);
 //shortest path len
 //shortest path
 //add edge
-int pathLen(int src, int dest, pathMat* M);
-
 
 /*
     A structure that represant a path in the graph
@@ -39,10 +37,12 @@ void addToPath(path* P, int id);
 
 void mergePaths(path* p1, path* p2);
 
-int shortestPath(int src, int dest, pathMat* M);
+void removeDoubles(path* P);
 
-path recreate(pathMat *M, int src, int dest);
+int distance(int src, int dest, pathMat* M);
 
-path TSP(path* cities);
+path* shortestPath(int src, int dest, pathMat* M);
+
+path* TSP(path* cities);
 
 #endif //SOFTSYS_A_04_ALGO_H
