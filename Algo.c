@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void init_path_mat(pathMat* M, Graph* g);
+void init_path_mat(pathMat* M, Graph* g){
     
     unsigned int inf  = -1; //max value that can be held by an int
 
     M -> dimantions = g -> V;
 
     M -> weightMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
-    M -> preMat = (int*) malloc(sizeof(int) * g -> V g -> V);
+    M -> preMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
 
     //initialising every value to inf
     for(int i = 0; i < g -> V; i++){
@@ -21,21 +21,21 @@ void init_path_mat(pathMat* M, Graph* g);
     }
 
     //executing first step of Fluid Warshall algorithm
-    Node n = * g -> start;
+    Node n =  g -> start;
 
     while(n != NULL){
 
-        Edge e = *n.firstEdge;
+        Edge e = n.firstEdge;
 
         while(e != NULL){
 
-            M -> weightMat[(g -> V * n.id) + e.destNode -> id] = e.weight;
-            M -> preMat[(g -> V * n.id) + e.destNode -> id] = n.id;
+            M -> weightMat[(g -> V * n -> id) + e -> destNode -> id] = e -> weight;
+            M -> preMat[(g -> V * n -> id) + e -> destNode -> id] = n -> id;
 
-            e = *e.nextEdge;
+            e = e -> nextEdge;
         }
 
-        n = *n.nextNode;
+        n = n -> nextNode;
     }
 
 
@@ -72,13 +72,21 @@ void freeMats(pathMat* M){
 int pathLen(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantions * src) + dest];}
 
 void addToPath(path* P, int id){
+
+    n = (Node) malloc(sizeof(Node));
+
     Node n = * P -> head;
 
-    while( n != NULL){
+    if( n == NULL){
+        P -> head = &n;
+        return;
+    }
+
+    while( n.nextNode != NULL){
         n = *n.nextNode;
     }
 
-    n = (Node) malloc(sizeof(Node));
+    n.nextNode = &n;
 }
 
 void mergePaths(path* p1, path* p2){
