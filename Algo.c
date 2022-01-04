@@ -50,8 +50,8 @@ void init_path_mat(pathMat* M, Graph* g);
 
                     if( M -> weightMat[(i * g -> V) + j] > visitK){
 
-                        M.weightMat[(i * g -> V) + j] = visitK;
-                        M.preMat[(i * g -> V) + j] = k;
+                        M -> weightMat[(i * g -> V) + j] = visitK;
+                        M -> preMat[(i * g -> V) + j] = k;
                     }
                 }
             }
@@ -69,7 +69,7 @@ void freeMats(pathMat* M){
     M -> weightMat = NULL;
 }
 
-int pathLen(int src, int dest, pathMat M){ return M -> weightMat[(M -> dimantions * src) + dest];}
+int pathLen(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantions * src) + dest];}
 
 void addToPath(path* P, int id){
     Node n = * P -> head;
