@@ -11,12 +11,11 @@ int main() {
     int id_node;
     int id_dest;
     int weight;
-//    int res;
-//    int cities;
-//    int i,city;
     char input;
     int size;
-//    int len;
+    int len =-1;
+    int city;
+    //add vars here pls
     Graph *graph = createGraph(0);
     scanf(" %c", &input);
     if (input != EOF) {
@@ -57,29 +56,25 @@ int main() {
                     input = checkEOF();
                     break;
                 case 'S': //shortest path len
+                    scanf("%d", &id_node);
+                    scanf("%d", &id_dest);
+                    //len = distance(src:id_node,dest:id_dest) idk
+                    printf("Dijsktra shortest path: %d \n",len);
                     break;
                 case 'T'://TSP
+                    scanf("%d",&len); //cities len
+                    for(int i = 0;i<len;i++) {
+                        scanf("%d", &city);
+                        //add city to a path I guess?
+                    }
+                    printf("TSP shortest path: %d \n",len);
                     break;
-                default:
-                    printGraph(graph);
+                default: //so IDE wouldn't scream at me ;-;
+                    break;
             }
-//        int V = 2;
-//        Graph *graph = createGraph(V);
-//        addEdge(graph, 0, 1, 2);
-//        addEdge(graph, 0, 4, 5);
-//        addEdge(graph, 1, 0, 1);
-//    addEdge(graph, 1, 3, 2);
-//    addEdge(graph, 1, 4, 6);
-//    addEdge(graph, 2, 3, 1);
-//    addEdge(graph, 3, 4, 2);
         }
-        printGraph(graph);
-
-//        removeNode(graph, 1);
-        freeGraph(graph);
-
-        // print the adjacency list representation of the above graph
-        //freeGraph(graph);
+        printGraph(graph); // for dbg
+        freeGraph(graph); // free at the end of program
         return 0;
     }
 }
