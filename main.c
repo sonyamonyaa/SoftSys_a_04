@@ -17,7 +17,7 @@ int main() {
     char input;
     int size;
 //    int len;
-    Graph *graph = NULL;
+    Graph *graph = createGraph(0);
     scanf(" %c", &input);
     if (input != EOF) {
         while (isCommand(input)) {
@@ -25,25 +25,20 @@ int main() {
             switch (input) {
                 case 'A':
                     scanf("%d", &size);
-                    if (graph != NULL) {
+                    if (graph) {
                         if(graph->start != NULL)
                             freeGraph(graph);
                     }
-                    int scanned;
                     graph = createGraph(size);
-                    scanf("%s", &input);
+                    scanf(" %c", &input);
                     while (input == 'n') {
                         scanf("%d", &id_node);
                         // Add the edges to the node
-                        scanned=scanf("%d", &id_dest);
-                        while (scanned == 1) {
+                        while (scanf("%d", &id_dest) == 1) {
                             scanf("%d", &weight);
                             addEdge(graph, id_node, id_dest, weight);
-                            scanned=scanf("%d", &id_dest);
                         }
-                        if(scanned==0){
-                            input = checkEOF();
-                        }
+                        input = checkEOF();
                     }
                     break;
                 case 'B': //new node
@@ -93,10 +88,10 @@ int main() {
 
 char checkEOF() {
     char ch;
-    if (scanf("%c", &ch) == EOF)
+    if ((scanf("%c",&ch)) == EOF)
         return 'Z';//assign an input that isn't a command to get out
-    else if (ch == ' ') {
-        if (scanf("%c", &ch) == EOF)
+    else if (ch == ' ' || ch == '\n') {
+        if ((scanf("%c",&ch)) == EOF)
             return 'Z';
     }
     return ch;
