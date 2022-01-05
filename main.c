@@ -58,8 +58,6 @@ int main() {
                     break;
                 case 'S': //shortest path len
                     break;
-                case 'P': //shortest path
-                    break;
                 case 'T'://TSP
                     break;
                 default:
@@ -97,5 +95,5 @@ char checkEOF() {
     return ch;
 }
 bool isCommand(char ch) {
-    return (ch == 'A' || ch == 'B' || ch == 'D' || ch == 'S' || ch == 'T' || ch == 'P');
+    return (ch == 'A' || ch == 'B' || ch == 'D' || ch == 'S' || ch == 'T');
 }
