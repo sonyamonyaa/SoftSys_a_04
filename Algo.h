@@ -39,6 +39,8 @@ void mergePaths(path* p1, path* p2);
 
 void removeDoubles(path* P);
 
+void freePath(path* P);
+
 int distance(int src, int dest, pathMat* M);
 
 path* shortestPath(int src, int dest, pathMat* M);
