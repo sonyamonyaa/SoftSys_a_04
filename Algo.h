@@ -15,6 +15,7 @@
 typedef struct pathMat{
     int* preMat;
     int* weightMat;
+    int MC;
     int dimantions;
 }pathMat;
 

@@ -7,6 +7,7 @@ void init_path_mat(pathMat* M, Graph* g){
     unsigned int inf  = -1; //max value that can be held by an int
 
     M -> dimantions = g -> V;
+    M -> MC = g -> MC;
 
     M -> weightMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
     M -> preMat = (int*) malloc(sizeof(int) * g -> V * g -> V);
