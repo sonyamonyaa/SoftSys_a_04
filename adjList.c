@@ -223,3 +223,30 @@ void printGraph(Graph *graph) {
         ptr = ptr->nextNode;
     }
 }
+Edge* getEdge(Graph* graph, int src, int dest){
+    Node *ptr;
+    Edge *q;
+
+    ptr = graph->start;
+    while (ptr != NULL) {
+        if(ptr->id != src) {
+            if (ptr->firstEdge == NULL)   //Edge list for node ptr is empty
+            {
+                return ptr->firstEdge;
+            }
+            ptr = ptr->nextNode;
+            continue;
+        }
+
+        if ((ptr->firstEdge->destNode->id == dest)) {
+            return ptr->firstEdge;
+        }
+        q = ptr->firstEdge;
+        while (q->nextEdge != NULL) {
+            if (q->nextEdge->destNode->id == dest) {
+                return q->nextEdge;
+            }
+            q = q->nextEdge;
+        }
+    }
+}

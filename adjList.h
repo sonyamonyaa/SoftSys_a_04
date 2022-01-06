@@ -58,5 +58,10 @@ void freeGraph(Graph *graph);
  */
 void printGraph(Graph *graph);
 
+/*
+ * returns a pointer to an edge from src to dest
+ */
+Edge *getEdge(Graph *graph,int src, int dest);
+
 
 #endif
