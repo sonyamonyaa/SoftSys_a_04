@@ -65,14 +65,28 @@ int main() {
                     input = checkEOF();
                     break;
                 case 'T'://TSP
-                    scanf("%d", &len); //cities len
-                    for (int i = 0; i < len; i++) {
-                        scanf("%d", &city);
-                        //add city to a path I guess?
-                    }
+
+                    if( M == NULL){ init_path_mat(M, graph);}
+                    if( M -> MC != graph -> MC){ init_path_mat(M, graph);}
+
+                    path* cities = (path*) malloc(sizeof(path));
+
+                    int city;
+                    while( scanf("%d", &city)){ addToPath(city);}
+
+                    path* ans = TSP(cities, M);
+
+                    updateWeight(ans, graph);
+                    
+                    printf("%d", ans -> weight);
+
+                    free(ans);
+                    free(cities);
+
                     printf("TSP shortest path: %d \n", len);
                     input = checkEOF();
                     break;
+
                 default:
                     break;
             }

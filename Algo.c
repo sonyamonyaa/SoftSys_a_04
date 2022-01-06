@@ -122,7 +122,7 @@ void mergePaths(path* p1, path* p2){
     n -> nextNode = p2 -> head;
 }
 
-void updateWeight(path* P, graph* g){
+void updateWeight(path* P, Graph* g){
 
     Node* n = P -> head;
 
