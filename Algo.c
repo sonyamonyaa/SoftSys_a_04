@@ -87,6 +87,7 @@ void freePath(path* P){
     }
 
     P -> head = NULL;
+    P -> weight = 0;
 }
 
 void addToPath(path* P, int id){
@@ -105,8 +106,7 @@ void addToPath(path* P, int id){
 
         n -> nextNode = c;
         P -> head = n;
-
-    }    
+    }
 }
 
 void mergePaths(path* p1, path* p2){
@@ -122,42 +122,19 @@ void mergePaths(path* p1, path* p2){
     n -> nextNode = p2 -> head;
 }
 
-path* shortestPath(int src, int dest, pathMat* M){
-
-    path* P = (path*) malloc(sizeof(path));
-
-    addToPath(P, dest);
-
-    int curr = dest;
-
-    while( curr != src){
-
-        int last = M -> preMat[( M -> dimantions * src) + curr];
-
-        if( last == -1){ return NULL;}        }
-
-        addToPath(last);
-
-        curr = last; 
-    }
-
-    return P;
-}
-
-void removeDoubles(path* P){
+void updateWeight(path* P, graph* g){
 
     Node* n = P -> head;
 
-    while( n -> nextNode != NULL){
+    //length < 2
+    if(n == NULL){ P -> weight = 0;}
+    if( n -> nextNode == NULL){ P -> weight = 0;}
 
-        if( n -> id == n -> nextNode -> id){
+    while(n -> nextNode != NULL){
 
-            n -> nextNode = n -> nextNode -> nextNode;
+        P -> weight += getEdge(g, n -> id, n -> nextNode -> id);
 
-        }else{
-
-            n = n -> nextNode;
-        }
+        n = n -> nextNode;
     }
 }
 
