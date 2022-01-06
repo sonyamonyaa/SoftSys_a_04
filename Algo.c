@@ -4,7 +4,7 @@
 
 void init_path_mat(pathMat* M, Graph* g){
     
-    unsigned int inf  = -1; //max value that can be held by an int
+    int inf  = 9999; //max value that can be held by an int
 
     M -> dimantions = g -> V;
     M -> MC = g -> MC;
@@ -39,7 +39,7 @@ void init_path_mat(pathMat* M, Graph* g){
         n = n -> nextNode;
     }
 
-
+    int visitK;
     //executing Fluid Warshall
     for(int i = 0; i < g -> V; i++){
         for(int j = 0; j < g -> V; j++){
@@ -47,7 +47,7 @@ void init_path_mat(pathMat* M, Graph* g){
 
                 if(i != j){
 
-                    int visitK = M -> weightMat[(i * g -> V) + k]  +  M -> weightMat[(k * g -> V) + j];
+                    visitK = M -> weightMat[(i * g -> V) + k]  +  M -> weightMat[(k * g -> V) + j];
 
                     if( M -> weightMat[(i * g -> V) + j] > visitK){
 
