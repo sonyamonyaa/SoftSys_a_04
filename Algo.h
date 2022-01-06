@@ -14,6 +14,7 @@
 
 typedef struct pathMat{
     int* weightMat;
+    int* preMat;
     int MC;
     int dimantions;
 }pathMat;
@@ -42,7 +43,7 @@ void mergePaths(path* p1, path* p2);
 
 void removeDoubles(path* P);
 
-void updateWeight(path* P, graph* g);
+void updateWeight(path* P, Graph* g);
 
 void freePath(path* P);
 
