@@ -4,7 +4,7 @@
 
 void init_path_mat(pathMat* M, Graph* g){
     
-    int inf  = 9999; //max value that can be held by an int
+    int inf  = 9999;
 
     M -> dimantions = g -> V;
     M -> MC = g -> MC;
