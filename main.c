@@ -1,9 +1,7 @@
 #include "adjList.h"
 #include "Algo.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 
 bool isCommand(char ch); //check whether a char is a command
 char checkEOF(); //check if an input is an eof and returning an unrelated char
@@ -97,3 +95,4 @@ char checkEOF() {
 }
 bool isCommand(char ch) {
     return (ch == 'A' || ch == 'B' || ch == 'D' || ch == 'S' || ch == 'T');
+}
