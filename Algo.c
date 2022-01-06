@@ -71,7 +71,22 @@ void freeMats(pathMat* M){
     M -> weightMat = NULL;
 }
 
-int distance(int src, int dest, pathMat* M){ return M -> weightMat[(M -> dimantions * src) + dest];}
+path* shortestPath(int src, int dest, pathMat* M) {
+    path *P = (path *) malloc(sizeof(path));
+    addToPath(P, dest);
+    int curr = dest;
+    while (curr != src) {
+        int last = M->preMat[(M->dimantions * src) + curr];
+        if (last == -1) { return NULL; }
+        addToPath(P, last);
+        curr = last;
+    }
+    return P;
+}
+
+int distance(int src, int dest, pathMat* M){
+        return M -> weightMat[(M -> dimantions * src) + dest];
+}
 
 void freePath(path* P){
 
@@ -79,11 +94,11 @@ void freePath(path* P){
 
     while( n -> nextNode != NULL){
 
-        Node* tmp = n.nextNode;
+        Node* tmp = n->nextNode;
 
         free(n);
 
-        n = &tmp;
+        n = tmp;
     }
 
     P -> head = NULL;
@@ -112,50 +127,47 @@ void addToPath(path* P, int id){
 void mergePaths(path* p1, path* p2){
 
     Node *n = p1 -> head;
-
     if(n == NULL){ p1 -> head = p2 -> head; return;}
-
     while(n -> nextNode != NULL){
         n = n -> nextNode;
     }
-
     n -> nextNode = p2 -> head;
 }
 
 void updateWeight(path* P, Graph* g){
 
     Node* n = P -> head;
-
+    Edge* q;
     //length < 2
     if(n == NULL){ P -> weight = 0;}
     if( n -> nextNode == NULL){ P -> weight = 0;}
 
     while(n -> nextNode != NULL){
-
-        P -> weight += getEdge(g, n -> id, n -> nextNode -> id);
-
+        q = getEdge(g, n -> id, n -> nextNode -> id);
+        P -> weight += q->weight;
         n = n -> nextNode;
     }
 }
-
+void removeDoubles(path* P){
+    Node* n = P -> head;
+    while( n -> nextNode != NULL){
+        if( n -> id == n -> nextNode -> id){
+            n -> nextNode = n -> nextNode -> nextNode;
+        }else{
+            n = n -> nextNode;
+        }
+    }
+}
 path* TSP(path* cities, pathMat* M){
-
     Node* n = cities -> head;
-
     path* P = (path*) malloc(sizeof(path));
-
     while(n -> nextNode != NULL){
-
         path* P2 = shortestPath( n -> id, n -> nextNode -> id, M);
-
         if(P2 == NULL){
             return NULL;
         }
-
         mergePaths(P, P2);
     }
-
     removeDoubles(P);
-
     return P;
 }

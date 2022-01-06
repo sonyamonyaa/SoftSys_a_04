@@ -2,6 +2,7 @@
 #include "Algo.h"
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 bool isCommand(char ch); //check whether a char is a command
 char checkEOF(); //check if an input is an eof and returning an unrelated char
@@ -71,8 +72,7 @@ int main() {
 
                     path* cities = (path*) malloc(sizeof(path));
 
-                    int city;
-                    while( scanf("%d", &city)){ addToPath(city);}
+                    while( scanf("%d", &city)){ addToPath(cities,city);}
 
                     path* ans = TSP(cities, M);
 

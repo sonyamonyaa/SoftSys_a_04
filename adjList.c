@@ -249,4 +249,5 @@ Edge* getEdge(Graph* graph, int src, int dest){
             q = q->nextEdge;
         }
     }
+    return NULL;
 }
