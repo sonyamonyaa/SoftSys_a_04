@@ -13,7 +13,6 @@
 */
 
 typedef struct pathMat{
-    int* preMat;
     int* weightMat;
     int MC;
     int dimantions;
@@ -32,7 +31,10 @@ void freeMats(pathMat* M);
     A structure that represant a path in the graph
     simlply a list of int's (ids)
 */
-typedef struct Path{ Node* head;} path;
+typedef struct Path{ 
+  Node* head;
+  int weight;
+} path;
 
 void addToPath(path* P, int id);
 
@@ -40,12 +42,14 @@ void mergePaths(path* p1, path* p2);
 
 void removeDoubles(path* P);
 
+void updateWeight(path* P, graph* g);
+
 void freePath(path* P);
+
+void printPath(path* P);
 
 int distance(int src, int dest, pathMat* M);
 
-path* shortestPath(int src, int dest, pathMat* M);
-
-path* TSP(path* cities);
+path* TSP(path* cities, pathMat* M);
 
 #endif //SOFTSYS_A_04_ALGO_H
