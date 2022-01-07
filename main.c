@@ -81,16 +81,25 @@ int main() {
                         addToPath(cities, city);
                     }
 
-                    path *ans = TSP(cities, M);
+                    path *ans = NULL;
+                    for(int i = 0; i < len; i++){
 
-                    updateWeight(ans, graph);
+                        *ans = TSP(cities, M);
 
-                    printf("%d", ans->weight);
+                        if( ans == NULL){ permute( cities);}
+                    }
+
+                    if( ans == NULL){
+                        printf("TSP shortest path: -1 \n");
+
+                    }else{
+                        updateWeight(ans, graph);
+                        printf("TSP shortest path: %d \n", ans->weight);
+                    }
 
                     free(ans);
                     free(cities);
 
-                    printf("TSP shortest path: %d \n", len);
                     input = checkEOF();
                     continue;
 
