@@ -158,16 +158,38 @@ void removeDoubles(path* P){
         }
     }
 }
+
+void permute(path* P){
+
+    Node* n = P -> head;
+
+    if( head == NULL){ return;}
+    if( head -> nextNode == NULL){ return;}
+
+    while(n -> nextNode != NULL){ n = n -> nextNode;}
+
+    n -> nextNode = P -> head;
+
+    Node* m = P -> head -> nextNode;
+    P -> head -> nextNode = NULL;
+    P -> head = m;
+}
+
+
 path* TSP(path* cities, pathMat* M){
+
     Node* n = cities -> head;
     path* P = (path*) malloc(sizeof(path));
+
     while(n -> nextNode != NULL){
+
         path* P2 = shortestPath( n -> id, n -> nextNode -> id, M);
-        if(P2 == NULL){
-            return NULL;
-        }
+
+        if(P2 == NULL){ return NULL;}
+
         mergePaths(P, P2);
     }
+
     removeDoubles(P);
     return P;
 }

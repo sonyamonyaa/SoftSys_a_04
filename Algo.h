@@ -49,6 +49,8 @@ void freePath(path* P);
 
 void printPath(path* P);
 
+void permute(path* P);
+
 int distance(int src, int dest, pathMat* M);
 
 path* TSP(path* cities, pathMat* M);
