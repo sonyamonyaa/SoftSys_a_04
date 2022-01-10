@@ -55,4 +55,6 @@ int distance(int src, int dest, pathMat* M);
 
 path* TSP(path* cities, pathMat* M);
 
+void remmoveCities(path* cities, path* visited);
+
 #endif //SOFTSYS_A_04_ALGO_H
