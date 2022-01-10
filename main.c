@@ -71,8 +71,9 @@ int main() {
                     continue;
                 case 'T'://TSP
 
-                    if (M == NULL) init_path_mat(M, graph);
-                    else if (M->MC != graph->MC) { init_path_mat(M, graph); }
+                    if (M->MC != graph->MC) {
+                        init_path_mat(M, graph);
+                    }
 
                     path *cities = (path *) malloc(sizeof(path));
                     cities -> head = NULL;
@@ -82,24 +83,39 @@ int main() {
                         addToPath(cities, city);
                     }
 
+                    path *best = (path *)malloc( sizeof (path));
+                    best ->head = NULL;
                     path *ans;
                     for(int i = 0; i < len; i++){
 
                         ans = TSP(cities, M);
 
-                        if( ans == NULL){ permute( cities,len);}
+                        if( ans != NULL){
+                            if(best -> head == NULL){
+                                best -> head = ans -> head;
+                            } else{
+                                updateWeight(ans, graph);
+                                updateWeight(best, graph);
+
+                                if( ans -> weight < best -> weight){ best -> head = ans -> head;}
+                            }
+                        }
+
+                        permute( cities,len);
                     }
 
-                    if( ans == NULL){
+                    if( best -> head == NULL){
                         printf("TSP shortest path: -1 \n");
-
                     }else{
-                        updateWeight(ans, graph);
-                        printf("TSP shortest path: %d \n", ans->weight);
+                        printf("TSP shortest path: %d \n", best->weight);
                     }
 
+                    freePath(cities);
+                    freePath(ans);
+                    freePath(best);
                     free(ans);
                     free(cities);
+                    free(best);
 
                     input = checkEOF();
                     continue;

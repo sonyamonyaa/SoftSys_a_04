@@ -43,17 +43,17 @@ void init_path_mat(pathMat* M, Graph* g){
     //executing Fluid Warshall
     for(int i = 0; i < g -> V; i++){
         for(int j = 0; j < g -> V; j++){
-            for(int k = 0; k < g -> V; k++){
+            if(i != j){
+                for(int k = 0; k < g -> V; k++){
+                    if((k != i) && (k!=j)) {
+                        visitK = M->weightMat[(i * g->V) + k] + M->weightMat[(k * g->V) + j];
 
-                if(i != j){
+                        if (M->weightMat[(i * g->V) + j] > visitK) {
 
-                    visitK = M -> weightMat[(i * g -> V) + k]  +  M -> weightMat[(k * g -> V) + j];
-
-                    if( M -> weightMat[(i * g -> V) + j] > visitK){
-
-                        M -> weightMat[(i * g -> V) + j] = visitK;
-
-                        M -> preMat[(i * g -> V) + j] = M -> preMat[(k * g -> V) + j];
+                            M->weightMat[(i * g->V) + j] = visitK;
+                            int last = M->preMat[(k * g->V) + j];
+                            M->preMat[(i * g->V) + j] = last;
+                        }
                     }
                 }
             }
@@ -93,7 +93,7 @@ void freePath(path* P){
 
     Node* n = P -> head;
 
-    while( n -> nextNode != NULL){
+    while( n != NULL){
 
         Node* tmp = n->nextNode;
 
@@ -150,6 +150,7 @@ void updateWeight(path* P, Graph* g){
 }
 void removeDoubles(path* P){
     Node* n = P -> head;
+    if(n == NULL) return;
     while( n -> nextNode != NULL){
         if( n -> id == n -> nextNode -> id){
             n -> nextNode = n -> nextNode -> nextNode;
@@ -195,42 +196,75 @@ void remmoveCities(path* cities, path* visited){
                 break;
             }
         }
+        if(m!=NULL){
+            while(m -> nextNode != NULL){
 
-        while(m -> nextNode != NULL){
-
-            if(m -> nextNode -> id == n -> id){
-                m -> nextNode = m -> nextNode -> nextNode;
-            }else{
-                m = m -> nextNode; 
+                if(m -> nextNode -> id == n -> id){
+                    m -> nextNode = m -> nextNode -> nextNode;
+                }else{
+                    m = m -> nextNode;
+                }
             }
         }
-
         n = n -> nextNode;
     }    
 }
 
+path* copyPath(path* P){
+
+    path * ans = (path*) malloc(sizeof (path));
+
+    Node * n = P -> head;
+    if(n == NULL){
+        return  ans;
+    } else{
+        ans -> head = (Node*) malloc(sizeof (path));
+        ans -> head -> id = P -> head -> id;
+
+        Node * m = ans -> head;
+        while (n -> nextNode != NULL){
+            m -> nextNode = (Node*) malloc(sizeof (Node));
+            m -> nextNode -> id = n -> nextNode -> id;
+
+            n = n -> nextNode;
+            m = m -> nextNode;
+        }
+        m -> nextNode = NULL;
+
+        return  ans;
+    }
+}
 
 path* TSP(path* cities, pathMat* M){
 
     path* P = (path*) malloc(sizeof(path));
     P->head = NULL;
+    path* P2;
+    cities = copyPath(cities);
 
     int stop = cities -> head != NULL;
     if(! stop){ return  P;}
-    stop = stop && cities -> head -> nextNode != NULL;
+
     while(stop){
 
-        path* P2 = shortestPath( cities -> head -> id, cities -> head -> nextNode -> id, M);
+        Node *n = P->head;
+        if(n == NULL || cities -> head -> nextNode != NULL){
+            P2 = shortestPath( cities -> head -> id, cities -> head -> nextNode -> id, M);
+        } else{
+
+            Node *last = P -> head;
+            while ( last -> nextNode != NULL){ last = last -> nextNode;}
+
+            P2 = shortestPath( last -> id, cities -> head -> id, M);
+        }
 
         if(P2 == NULL){ return NULL;}
 
         mergePaths(P, P2);
 
-        //remove from cities
+        remmoveCities(cities,P);
 
         stop = cities -> head != NULL;
-        if(! stop){ break;}
-        stop = stop && cities -> head -> nextNode != NULL;
     }
 
     removeDoubles(P);
