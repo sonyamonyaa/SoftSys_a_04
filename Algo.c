@@ -177,6 +177,38 @@ void permute(path* P,int len){
     P -> head = m;
 }
 
+void remmoveCities(path* cities, path* visited){
+
+    Node* n = visited -> head;
+    if(n == NULL){ return;}
+
+    while(n != NULL){
+
+        Node* m = cities -> head;
+
+        while(m != NULL){
+
+            if(m -> id == n -> id){
+                cities -> head = m -> nextNode;
+                m = cities -> head;
+            }else{
+                break;
+            }
+        }
+
+        while(m -> nextNode != NULL){
+
+            if(m -> nextNode -> id == n -> id){
+                m -> nextNode = m -> nextNode -> nextNode;
+            }else{
+                m = m -> nextNode; 
+            }
+        }
+
+        n = n -> nextNode;
+    }    
+}
+
 
 path* TSP(path* cities, pathMat* M){
 
