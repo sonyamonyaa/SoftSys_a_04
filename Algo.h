@@ -49,7 +49,7 @@ void freePath(path* P);
 
 void printPath(path* P);
 
-void permute(path* P);
+void permute(path* P, int len);
 
 int distance(int src, int dest, pathMat* M);
 

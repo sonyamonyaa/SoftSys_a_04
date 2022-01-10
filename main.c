@@ -71,22 +71,23 @@ int main() {
                     continue;
                 case 'T'://TSP
 
-                    if (M == NULL) { init_path_mat(M, graph); }
+                    if (M == NULL) init_path_mat(M, graph);
                     else if (M->MC != graph->MC) { init_path_mat(M, graph); }
 
                     path *cities = (path *) malloc(sizeof(path));
+                    cities -> head = NULL;
                     scanf("%d", &len);
                     for (int i = 0; i < len; i++) {
                         scanf("%d", &city);
                         addToPath(cities, city);
                     }
 
-                    path *ans = NULL;
+                    path *ans;
                     for(int i = 0; i < len; i++){
 
-                        *ans = TSP(cities, M);
+                        ans = TSP(cities, M);
 
-                        if( ans == NULL){ permute( cities);}
+                        if( ans == NULL){ permute( cities,len);}
                     }
 
                     if( ans == NULL){

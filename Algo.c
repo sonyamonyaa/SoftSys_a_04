@@ -73,6 +73,7 @@ void freeMats(pathMat* M){
 
 path* shortestPath(int src, int dest, pathMat* M) {
     path *P = (path *) malloc(sizeof(path));
+    P ->head =NULL;
     addToPath(P, dest);
     int curr = dest;
     while (curr != src) {
@@ -109,16 +110,15 @@ void addToPath(path* P, int id){
 
     Node *n = (Node*) malloc(sizeof(Node));
 
-    n -> id = id; n -> nextNode = NULL; n -> firstEdge = NULL;
+    n -> id = id;
+    n -> firstEdge = NULL;
+    n -> nextNode = NULL;
 
     Node* c = P -> head;
 
     if( c == NULL){
-
         P -> head = n;
-        
     }else{
-
         n -> nextNode = c;
         P -> head = n;
     }
@@ -135,7 +135,7 @@ void mergePaths(path* p1, path* p2){
 }
 
 void updateWeight(path* P, Graph* g){
-
+    P->weight = 0;
     Node* n = P -> head;
     Edge* q;
     //length < 2
@@ -159,14 +159,16 @@ void removeDoubles(path* P){
     }
 }
 
-void permute(path* P){
+void permute(path* P,int len){
+
+    if( P->head == NULL){ return;}
+    if( P ->head -> nextNode == NULL){ return;}
 
     Node* n = P -> head;
 
-    if( head == NULL){ return;}
-    if( head -> nextNode == NULL){ return;}
-
-    while(n -> nextNode != NULL){ n = n -> nextNode;}
+    for(int i = 0; i<len-1;i++){
+        n = n -> nextNode;
+    }
 
     n -> nextNode = P -> head;
 
@@ -178,16 +180,25 @@ void permute(path* P){
 
 path* TSP(path* cities, pathMat* M){
 
-    Node* n = cities -> head;
     path* P = (path*) malloc(sizeof(path));
+    P->head = NULL;
 
-    while(n -> nextNode != NULL){
+    int stop = cities -> head != NULL;
+    if(! stop){ return  P;}
+    stop = stop && cities -> head -> nextNode != NULL;
+    while(stop){
 
-        path* P2 = shortestPath( n -> id, n -> nextNode -> id, M);
+        path* P2 = shortestPath( cities -> head -> id, cities -> head -> nextNode -> id, M);
 
         if(P2 == NULL){ return NULL;}
 
         mergePaths(P, P2);
+
+        //remove from cities
+
+        stop = cities -> head != NULL;
+        if(! stop){ break;}
+        stop = stop && cities -> head -> nextNode != NULL;
     }
 
     removeDoubles(P);
